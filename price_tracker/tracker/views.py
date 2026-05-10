@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.db.models import Avg, Max, Min, Prefetch
 from django.http import HttpResponse, JsonResponse
@@ -169,16 +170,6 @@ def home(request):
         product.latest_price = None
         product.price_drop_amount = None
         product.is_best_deal = False
-        product.predicted_price = None
-        product.decision = None
-
-        try:
-            pred = predict_next_price(product.id)
-            product.predicted_price = pred.get("predicted_price")
-            product.decision = pred.get("decision")
-        except Exception:
-            product.predicted_price = None
-            product.decision = None
 
         if history:
             product.latest_price = history[0].price
@@ -235,13 +226,16 @@ def product_detail(request, pk):
             price_change_percent = ((last - first) / first) * 100
             price_direction = "down" if last < first else "up" if last > first else "stable"
 
-    try:
-        pred = predict_next_price(product.id)
-        predicted_price = pred.get("predicted_price")
-        decision = pred.get("decision")
-    except Exception:
-        predicted_price = None
-        decision = None
+    cache_key = f"prediction_{product.id}"
+    pred = cache.get(cache_key)
+    if pred is None:
+        try:
+            pred = predict_next_price(product.id)
+            cache.set(cache_key, pred, timeout=3600)
+        except Exception:
+            pred = {}
+    predicted_price = pred.get("predicted_price")
+    decision = pred.get("decision")
 
     return render(request, "tracker/product_detail.html", {
         "product": product,
