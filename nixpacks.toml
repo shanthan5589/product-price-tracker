@@ -2,7 +2,7 @@ providers = ["python"]
 
 [phases.install]
 cmds = [
-  "pip3 install -r price_tracker/requirements.txt",
+  "python3 -m pip install -r price_tracker/requirements.txt",
   "playwright install --with-deps chromium"
 ]
 
