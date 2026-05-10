@@ -2,6 +2,7 @@ providers = ["python"]
 
 [phases.install]
 cmds = [
+  "python3 -m ensurepip --upgrade",
   "python3 -m pip install -r price_tracker/requirements.txt",
   "playwright install --with-deps chromium"
 ]
