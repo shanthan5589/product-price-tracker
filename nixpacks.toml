@@ -2,10 +2,10 @@ providers = ["python"]
 
 [phases.install]
 cmds = [
-  "python3 -m ensurepip --upgrade",
-  "python3 -m pip install -r price_tracker/requirements.txt",
-  "playwright install --with-deps chromium"
+  "python3 -m venv /opt/venv",
+  "/opt/venv/bin/pip install -r price_tracker/requirements.txt",
+  "/opt/venv/bin/playwright install --with-deps chromium"
 ]
 
 [phases.build]
-cmds = ["cd price_tracker && python3 manage.py collectstatic --no-input"]
+cmds = ["cd price_tracker && /opt/venv/bin/python manage.py collectstatic --no-input"]
