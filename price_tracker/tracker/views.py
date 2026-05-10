@@ -14,8 +14,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .forms import EmailAuthenticationForm, RegisterForm
 from .models import AlertRule, PriceRecord, Product
 from .ml.predict import predict_next_price
-from .utils import send_price_alert
-
 
 # =========================
 # AUTH HELPERS
@@ -244,31 +242,6 @@ def product_detail(request, pk):
     except Exception:
         predicted_price = None
         decision = None
-
-    if predicted_price is not None and current_price is not None:
-        try:
-            predicted_value = float(predicted_price)
-            current_value = float(current_price)
-
-            if predicted_value < current_value:
-                alerts = AlertRule.objects.filter(product=product, is_active=True)
-
-                for alert in alerts:
-                    if not getattr(alert, "notified", False):
-                        try:
-                            send_price_alert(
-                                alert.email,
-                                product,
-                                current_price,
-                                predicted_price,
-                            )
-                            if hasattr(alert, "notified"):
-                                alert.notified = True
-                                alert.save(update_fields=["notified"])
-                        except Exception as e:
-                            print("Email failed:", e)
-        except Exception as e:
-            print("Alert trigger failed:", e)
 
     return render(request, "tracker/product_detail.html", {
         "product": product,

@@ -120,30 +120,6 @@
     {% endif %}
 </div>
 
-        {% if product.alerts.all %}
-        <div class="info-card">
-    <h4>Set price alert</h4>
-
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'create_alert' %}">
-            {% csrf_token %}
-            <input type="hidden" name="product" value="{{ product.pk }}">
-
-            <label>Alert threshold (₹)</label>
-            <input type="number" name="target_price" placeholder="Target price" step="0.01" required>
-
-            <button type="submit">Create alert →</button>
-        </form>
-    {% else %}
-        <div class="login-box">
-            <p style="margin-bottom: 14px;">Login to create a price alert for this product.</p>
-            <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="auth-btn" style="display:inline-block;text-decoration:none;text-align:center;">
-                Go to login
-            </a>
-        </div>
-    {% endif %}
-</div>
-        {% endif %}
 
     </aside>
 </div>
