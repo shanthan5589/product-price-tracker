@@ -31,7 +31,10 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".railway.app", ".up.railway.app"]
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    # Railway terminates HTTPS at the proxy. Keeping Django's own HTTPS
+    # redirect enabled makes Railway's internal HTTP healthcheck receive a
+    # redirect instead of a 200 response.
+    SECURE_SSL_REDIRECT = False
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True

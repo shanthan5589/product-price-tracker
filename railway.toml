@@ -3,5 +3,5 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "cd price_tracker && /opt/venv/bin/python manage.py migrate && /opt/venv/bin/gunicorn price_tracker.wsgi:application --bind 0.0.0.0:$PORT --workers 2"
-healthcheckPath = "/"
+healthcheckPath = "/healthz/"
 restartPolicyType = "on_failure"
