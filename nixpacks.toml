@@ -2,9 +2,9 @@ providers = ["python"]
 
 [phases.install]
 cmds = [
-  "pip install -r price_tracker/requirements.txt",
+  "pip3 install -r price_tracker/requirements.txt",
   "playwright install --with-deps chromium"
 ]
 
 [phases.build]
-cmds = ["cd price_tracker && python manage.py collectstatic --no-input"]
+cmds = ["cd price_tracker && python3 manage.py collectstatic --no-input"]
