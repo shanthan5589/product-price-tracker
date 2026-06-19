@@ -135,7 +135,7 @@ class ProductDetailViewTests(TestCase):
         self.source = make_source()
         self.product = make_product(self.source)
 
-    @patch("tracker.views.predict_next_price", return_value={"predicted_price": 450.0, "decision": "BUY"})
+    @patch("tracker.ml.predict.predict_next_price", return_value={"predicted_price": 450.0, "decision": "BUY"})
     def test_detail_with_price_history(self, _mock):
         make_price(self.product, self.source, "500.00")
         make_price(self.product, self.source, "480.00")
@@ -144,7 +144,7 @@ class ProductDetailViewTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, "Test Phone")
 
-    @patch("tracker.views.predict_next_price", return_value={})
+    @patch("tracker.ml.predict.predict_next_price", return_value={})
     def test_detail_no_prices(self, _mock):
         url = reverse("product_detail", kwargs={"pk": self.product.pk})
         resp = self.client.get(url)
@@ -315,7 +315,7 @@ class PredictViewTests(TestCase):
         self.source = make_source()
         self.product = make_product(self.source)
 
-    @patch("tracker.views.predict_next_price", return_value={"predicted_price": 450.0, "decision": "BUY"})
+    @patch("tracker.ml.predict.predict_next_price", return_value={"predicted_price": 450.0, "decision": "BUY"})
     def test_predict_returns_json(self, _mock):
         url = reverse("predict_price", kwargs={"product_id": self.product.pk})
         resp = self.client.get(url)

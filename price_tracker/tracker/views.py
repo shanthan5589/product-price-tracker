@@ -230,6 +230,7 @@ def product_detail(request, pk):
     pred = cache.get(cache_key)
     if pred is None:
         try:
+            from .ml.predict import predict_next_price
             pred = predict_next_price(product.id)
             cache.set(cache_key, pred, timeout=3600)
         except Exception:
