@@ -14,7 +14,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import EmailAuthenticationForm, RegisterForm
 from .models import AlertRule, PriceRecord, Product
-from .ml.predict import predict_next_price
 
 # =========================
 # AUTH HELPERS
@@ -95,6 +94,7 @@ def healthcheck(request):
 
 
 def predict_price_view(request, product_id):
+    from .ml.predict import predict_next_price
     result = predict_next_price(product_id)
     return JsonResponse(result)
 

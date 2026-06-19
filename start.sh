@@ -6,4 +6,5 @@ python manage.py shell -c \
   || python manage.py loaddata initial_products
 exec gunicorn price_tracker.wsgi:application \
   --bind 0.0.0.0:${PORT:-8000} \
-  --workers 2
+  --workers 1 \
+  --timeout 120

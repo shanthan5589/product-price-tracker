@@ -1,8 +1,6 @@
-import torch
-from .lstm_model import train_lstm
-
-
 def predict_next_price(product_id):
+    import torch
+    from .lstm_model import train_lstm
     result = train_lstm(product_id)
 
     if not result:
